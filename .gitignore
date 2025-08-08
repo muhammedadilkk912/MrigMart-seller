@@ -1,0 +1,12 @@
+//backend
+
+/backend/node_modules
+backend/dist
+/backend/dist-ssr
+/*.local
+/backend/.env
+
+
+
+
+

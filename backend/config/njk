@@ -1,0 +1,68 @@
+
+    // let updateQuery={}
+    
+    // console.log(id)
+    //  if(req.files && req.files.length>0){
+    //     const uploadPromises = req.files.map(file =>
+    //   uploadBufferToCloudinary(file.buffer)
+    // )
+    //      const image_res=await Promise.all(uploadPromises)
+    //      console.log('images_res',image_res)
+    //      updateQuery.$push={images:{$each:image_res}}
+
+    // }
+    // let fields={}
+    // if(dynamicfields){
+    //     dynamicfields=JSON.parse(dynamicfields)
+    //    fields.core_details=dynamicfields
+
+    // }
+    // if(product){
+    //     product=JSON.parse(product)
+    //      const discountprice = Math.round(
+    //     product.price - (product.price * product.discount) / 100
+    //   );
+      
+    //   fields={
+    //     ...fields,
+    //     name: product.name,
+    //     description: product.description,
+    //     price: product.price,
+    //     discount: product.discount,
+    //     stock: product.stock,
+    //     discountprice,
+    //     status: product.status,
+    //     category: product.category,
+
+    //   }
+
+     
+    // }
+    // if(Object.keys(fields).length>0){
+    //     updateQuery.$set=fields
+    // }
+    // console.log("update query=",updateQuery)
+   
+   
+    // console.log("the guery=",updateQuery)
+    // if(updateQuery)
+    // try {
+        
+    //            if (Object.keys(updateQuery).length > 0) {
+    //   const result = await productModel.updateOne({ _id: id }, updateQuery);
+    //   console.log("Update result:", result);
+        
+    // } 
+    // return res.status(200).json({
+    //     message: "Product updated successfully",
+      
+    //   });
+    // }
+    // catch (error) {
+    //     console.log(error)
+    //     res.status(500).json({message:"internal server error"})
+        
+        
+    // }
+    // return res.status(500).json({message:"internal error"})
+    
