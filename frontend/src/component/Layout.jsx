@@ -211,7 +211,7 @@ const Layout = () => {
         mobileSidebar && (
           <div 
         className={ ` block sm:hidden bg-white border-r fixed top-0 left-0 border-gray-300 text-gray-300 transition-all duration-300 ease-in-out 
-        ${sidebarOpen ? 'w-64 translate-x-0' : 'w-20 -translate-x-full md:translate-x-0'} 
+        ${mobileSidebar ? 'w-64 translate-x-0' : 'w-20 -translate-x-full md:translate-x-0'} 
          md:relative h-full z-30`}
        >
         <div className="p-4 flex items-center justify-between h-16">
@@ -245,8 +245,8 @@ const Layout = () => {
               className={`flex  items-center px-3 py-3  rounded-full mx-2 my-2  cursor-pointer transition-colors duration-200 
                 ${isActive ? 'bg-gray-100  text-blue-500' : 'hover:bg-gray-100 text-gray-400 hover:text-blue-500'}`}
             >
-               <span className={`${sidebarOpen ? 'mr-3' : 'mx-auto'}`}>{item.icon}</span>
-              {sidebarOpen && (
+               <span className={`${mobileSidebar ? 'mr-3' : 'mx-auto'}`}>{item.icon}</span>
+              {mobileSidebar && (
                 <span className="whitespace-nowrap">{item.name}</span>
               )}
 
@@ -280,7 +280,7 @@ const Layout = () => {
         {/* Top Bar */}
         <header className="bg-white shadow-sm sticky top-0 z-50">
           <div className="flex items-center justify-between sm:justify-end px-6 py-4 h-16">
-            <div className='bg-gray-200 flex justify-center rounded px-1 py-0.5'>
+            <div className=' flex sm:hidden bg-gray-200  justify-center rounded px-1 py-0.5'>
               <button
               onClick={() => setMobileSidebar(!mobileSidebar)}   
               >

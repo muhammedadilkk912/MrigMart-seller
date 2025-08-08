@@ -65,7 +65,7 @@ const registeration=async(req,res)=>{
 }
 const logout=(req,res)=>{
     
-       res.clearCookie('seller_token', {
+       res.clearCookie('seller_token', {    
         httpOnly: true,
         secure: true,       // must match cookie options from login
         sameSite: 'strict', // must match
@@ -320,6 +320,7 @@ const updateproduct=async(req,res)=>{
      const getprofile=async(req,res)=>{
         try {
             const profile=await sellerModel.findById(req.seller.id)
+            console.log(profile)
             return res.status(200).json({message:"profile fetched successfully",profile})
         } catch (error) {
             console.log('error in get profile=',error)

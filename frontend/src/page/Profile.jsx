@@ -1,94 +1,93 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../configure/axios";
-import { FaCamera } from "react-icons/fa";
+import { FaCamera, FaEdit, FaSave, FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
-import {useDispatch} from 'react-redux'
-import { showLoading,hideLoading } from "../Redux/LoadingSlic";
+import { useDispatch } from 'react-redux';
+import { showLoading, hideLoading } from "../Redux/LoadingSlic";
 import { setLogo } from "../Redux/authSlic";
 
-
 const SimpleBusinessProfile = () => {
-  
-  const dispatch=useDispatch()
-  
+  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("business");
   const [isEditing, setIsEditing] = useState(false);
-  const [editData,SetEditData]=useState({})
-  const [logo,setlogo]=useState() 
-  const [preview,setPreview]=useState()
-  // Business data state
-  const [profile, setProfile] = useState({
-    
-      businessName: "",
-      businessType: "",
-      phone: "",
-      email: "",
-      phone: "",
-      status: "",
-     });
-  const [address,setAddress]=useState({
-     street: "123 Business Ave",
-      city: "New York",
-      state: "NY",
-      district: "10001",
-      country: "USA",
-      pin: "",
+  const [editData, setEditData] = useState({});
+  const [logo, setLogo] = useState();
+  const [preview, setPreview] = useState();
 
-  })
-  const [bank,setBank]=useState({
-       accountHolderName: '',
+  // State for profile data
+  const [profile, setProfile] = useState({
+    businessName: "",
+    businessType: "",
+    phone: "",
+    email: "",
+    status: "",
+  });
+
+  const [address, setAddress] = useState({
+    street: "",
+    city: "",
+    state: "",
+    district: "",
+    country: "",
+    pin: "",
+  });
+
+  const [bank, setBank] = useState({
+    accountHolderName: '',
     accountNumber: '',
-    bankName:'',
-    ifscCode: '',    
-    branch:''
-  })
-  console.log("Bank=",bank)
+    bankName: '',
+    ifscCode: '',
+    branch: ''
+  });
+
   useEffect(() => {
     getprofile();
   }, []);
+
   const getprofile = async () => {
     try {
-      dispatch(showLoading())
+      dispatch(showLoading());
       const response = await axiosInstance.get("/seller/getprofile");
-      let data = response?.data.profile;
-      console.log(response);
+      const data = response?.data.profile;
+      console.log(data)
+      
       setProfile({
-        ...profile,
         businessName: data.businessName,
         businessType: data.businessType,
         status: data.status,
         email: data.email,
-        phone:data.phone
+        phone: data.phone
       });
+
       setAddress({
-         street: data.address.street,
-      city:  data.address.city,
-      state:  data.address.state,
-      district:  data.address.district,
-      country: data.address.country,
-      pin:  data.address.pin,
+        street: data.address.street,
+        city: data.address.city,
+        state: data.address.state,
+        district: data.address.district,
+        country: data.address.country,
+        pin: data.address.pin,
+      });
 
-      })
       setBank({
-          accountHolderName: data.bankDetails.accountHolderName,
-    accountNumber: data.bankDetails.accountNumber,
-    bankName:data.bankDetails.bankName,
-    ifscCode: data.bankDetails.ifscCode,    
-    branch:data.bankDetails.branch 
-      })  
-      setlogo(data?.logo)
-       let lc=data.logo
-      dispatch(setLogo(lc))
+        accountHolderName: data.bankDetails.accountHolderName,
+        accountNumber: data.bankDetails.accountNumber,
+        bankName: data.bankDetails.bankName,
+        ifscCode: data.bankDetails.ifscCode,
+        branch: data.bankDetails.branch
+      });
 
-      setPreview(data?.logo)
-      SetEditData(data)
+      setLogo(data?.logo);
+      setPreview(data?.logo);
+      setEditData(data);
+      dispatch(setLogo(data.logo));
     } catch (error) {
-      console.log("error in get profile=", error);
-    }finally{
-      dispatch(hideLoading())
+      console.log("Error in get profile:", error);
+    } finally {
+      dispatch(hideLoading());
     }
   };
-   const handleLogoChange = (e) => {
+
+     const handleLogoChange = (e) => {
       const file = e.target.files[0];
       console.log(file)  
       let maxsize=3*1024*1024
@@ -112,7 +111,7 @@ const SimpleBusinessProfile = () => {
          
           setPreview(reader.result)
           console.log("file=",file)
-          setlogo(file)
+          setLogo(file)
           
         };
         reader.readAsDataURL(file);
@@ -133,10 +132,11 @@ const SimpleBusinessProfile = () => {
         }        if(!profile.phone.trim()){
             toast.error('mobile number is required')
             return false
-        }
+        }      
         const mobileRegex = /^[6-9]\d{9}$/;
         if(!mobileRegex.test(profile.phone)){
             toast.error('wrong phone number format')
+            return false
         }
 
         return true
@@ -220,6 +220,8 @@ const SimpleBusinessProfile = () => {
           console.log(change,"+++",imageCheck)
           if(change && bus_validation()){
             formData.append('profile',JSON.stringify(profile))
+          }else{
+            return null
           }
           // return null
           // console.log(bus_validation())
@@ -316,7 +318,7 @@ const  handleInputChange=(name,value)=>{
     }
     console.log("new obj=",obj)
     setProfile(obj)
-    setlogo(editData.logo)
+    setLogo(editData.logo)
     setPreview(editData.logo)
     
     
@@ -351,491 +353,433 @@ const  handleInputChange=(name,value)=>{
   };
 
   return (
-    <div className="min-h-screen  py-8 px-4">
-      <div className="max-w-3xl mx-auto  rounded-lg shadow-md overflow-hidden">
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="bg-blue-600 p-6 text-white">
-          <h1 className="text-2xl font-bold">Business Profile</h1>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Business Profile</h1>
+          <p className="mt-2 text-gray-600">Manage your business information</p>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex border-b border-gray-300 bg-white/90 hover:bg-whit">
-          <button
-            onClick={() => {setActiveTab("business")      
-              setIsEditing(false)
-            }}
-            className={`px-6 py-3 font-medium ${
-              activeTab === "business"
-                ? "text-blue-600 border-b-2 border-blue-600"
-                : "text-gray-600 hover:text-gray-800"
-            }`}
-          >
-            Business Details
-          </button>
-          <button
-            onClick={() => {setActiveTab("address")
-              setIsEditing(false)
-
-            }}
-            className={`px-6 py-3 font-medium ${
-              activeTab === "address"
-                ? "text-blue-600 border-b-2 border-blue-600"
-                : "text-gray-600 hover:text-gray-800"
-            }`}
-          >
-            Address
-          </button>
-          <button
-            onClick={() =>{ setActiveTab("bank")
-              setIsEditing(false)
-            }}
-            className={`px-6 py-3 font-medium ${
-              activeTab === "bank"
-                ? "text-blue-600 border-b-2 border-blue-600"
-                : "text-gray-600 hover:text-gray-800"
-            }`}
-          >
-            Bank Details
-          </button>
-        </div>
-
-        {/* Content Area */}
-        <div className="p-6 bg-white/60 hover:bg-white">
-          {/* Edit/Save Buttons */}
-          <div className="flex justify-end mb-6">
-            {isEditing ? (
-              <div className="space-x-3">
-                <button
-                  onClick={ handleCancel}
-                  className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                >
-                  Save
-                </button>
-              </div>
-            ) : (
+        {/* Main Card */}
+        <div className="bg-white rounded-xl shadow-md overflow-x-auto overflow-hidden">
+          {/* Navigation Tabs */}
+          <div className="border-b border-gray-200">
+            <nav className="flex -mb-px">
               <button
-                onClick={() => setIsEditing(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                onClick={() => {
+                  setActiveTab("business");
+                  setIsEditing(false);
+                }}
+                className={`flex-1 py-4 px-1 text-center border-b-2 font-medium text-sm ${
+                  activeTab === "business"
+                    ? "border-indigo-500 text-indigo-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                }`}
               >
-                Edit
+                Business Details
               </button>
-            )}
+              <button
+                onClick={() => {
+                  setActiveTab("address");
+                  setIsEditing(false);
+                }}
+                className={`flex-1 py-4 px-1 text-center border-b-2 font-medium text-sm ${
+                  activeTab === "address"
+                    ? "border-indigo-500 text-indigo-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                }`}
+              >
+                Address
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab("bank");
+                  setIsEditing(false);
+                }}
+                className={`flex-1 py-4 px-1 text-center border-b-2 font-medium text-sm ${
+                  activeTab === "bank"
+                    ? "border-indigo-500 text-indigo-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                }`}
+              >
+                Bank Details
+              </button>
+            </nav>
           </div>
 
-          {/* Business Details Tab */}
-          {activeTab === "business" && (
-            <div className="space-y-6">
-              <div className="flex items-start gap-6">
-                <div className="relative flex-shrink-0">
-                  <img
-                    src={preview}
-                    alt="Business logo"
-                    className="h-24 w-24 rounded-lg object-cover border"
-                  />
-
-                  {isEditing && (
-                    <>
-                      <label
-                        htmlFor="logoUpload"
-                        className="absolute bottom-0 right-0 bg-black p-2 rounded-full cursor-pointer"
-                      >
-                        <FaCamera className="text-white text-sm" />
-                      </label>
-                      <input
-                        type="file"
-                        id="logoUpload"
-                        accept="image/*"
-                         onChange={handleLogoChange}
-                        className="hidden"
-                      />
-                    </>
-                  )}
+          {/* Content Area */}
+          <div className="p-6 md:p-8">
+            {/* Edit/Save Buttons */}
+            <div className="flex justify-end mb-6">
+              {isEditing ? (
+                <div className="flex space-x-3">
+                  <button
+                    onClick={handleCancel}
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    <FaTimes className="mr-2" />
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSubmit}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    <FaSave className="mr-2" />
+                    Save Changes
+                  </button>
                 </div>
+              ) : (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  <FaEdit className="mr-2" />
+                  Edit Profile
+                </button>
+              )}
+            </div>
 
-                <div className="flex-1">
-                  {isEditing ? (
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Business Name
-                        </label>
-                        <input
-                          type="text"
-                          name="businessName"
-                          value={profile.businessName}
-                          onChange={(e) =>
-                            changeBusiness(e)
-                          }
-                          className="mt-1 w-full p-2 border rounded-md"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Business Type
-                        </label>
-                        <select
-                        name="businessType"
-                          
-                          value={profile?.businessType}
-                          onChange={(e) =>
-                            changeBusiness(e)
-                          }
-                          className="mt-1 w-full p-2 border rounded-md"
-                        >
-                          <option value="">
-                            {profile?.businessType
-                              ? profile.businessType
-                              : "select the field"}
-                          </option>
-                          <option value="Sole Proprietorship">
-                            Sole Proprietorship
-                          </option>
-                          <option value="Partnership">Partnership</option>
-                          <option value="LLC">LLC</option>
-                          <option value="Corporation">Corporation</option>
-                          <option value="Nonprofit">Nonprofit</option>
-                          <option value="Other">Other</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Business Email
-                        </label>
-                        <input
-                         name="email"
-                          type="text"
-                          value={profile.email}
-                          onChange={(e) =>
-                            changeBusiness(e)
-                          }
-                          className="mt-1 w-full p-2 border rounded-md"
-                        />
-                      </div>
-                      {/* <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    Status
-  </label>
-  <div className="flex items-center gap-4">
-    <label className="inline-flex items-center">
-      <input
-        type="radio"
-        name="status"
-        value="active"
-        defaultChecked={profile?.status === 'active'}
-        className="form-radio h-4 w-4 text-blue-600"
-      />
-      <span className="ml-2 text-gray-700">Active</span>
-    </label>
-
-    <label className="inline-flex items-center">
-      <input
-        type="radio"
-        name="status"
-        value="inactive"
-        defaultChecked={profile?.status === 'inactive'}
-        className="form-radio h-4 w-4 text-red-600"
-      />
-      <span className="ml-2 text-gray-700">Inactive</span>
-    </label>
-  </div>
-</div> */}
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Phone number
-                        </label>
-                        <input
-                          name="phone"
-                          type="text"
-                          value={profile?.phone}
-                          onChange={(e) =>
-                           changeBusiness(e)
-                          }
-                          className="mt-1 w-full p-2 border rounded-md"
-                        />
-                      </div>
+            {/* Business Details Tab */}
+            {activeTab === "business" && (
+              <div className="space-y-6">
+                <div className="flex flex-col md:flex-row gap-8">
+                  {/* Logo Section */}
+                  <div className="flex-shrink-0">
+                    <div className="relative">
+                      <img
+                        src={preview}
+                        alt="Business logo"
+                        className="h-32 w-32 rounded-lg object-cover border-2 border-gray-200"
+                      />
+                      {isEditing && (
+                        <>
+                          <label
+                            htmlFor="logoUpload"
+                            className="absolute bottom-2 right-2 bg-indigo-600 p-2 rounded-full cursor-pointer shadow-md hover:bg-indigo-700 transition-colors"
+                            title="Change logo"
+                          >
+                            <FaCamera className="text-white text-sm" />
+                          </label>
+                          <input
+                            type="file"
+                            id="logoUpload"
+                            accept="image/*"
+                            onChange={handleLogoChange}
+                            className="hidden"
+                          />
+                        </>
+                      )}
                     </div>
-                  ) : (
-                    <div>
-                      <h2 className="text-xl font-bold">
-                        {profile?.businessName}
-                      </h2>
-                      <p className="text-gray-600">{profile?.businessType}</p>
-                      <div className="mt-4 space-y-1">
-                        <p>{profile.email}</p>
-                        <p>{profile.phone || '9887'}</p>
-                        <p className="inline my-2 px-2 rounded-full py-1 bg-green-400 text-white ">{profile?.status}</p>
-                       {/* <span className="text-gray-500 inline">Status : <p className=" flex justify-center bg-green-500 text-white rounded px-2">{profile?.status}</p></span> */}
-                      </div>
-                    </div>
-                  )}
+                  </div>
+
+                  {/* Business Info */}
+                  <div className="flex-1 space-y-4">
+                    {isEditing ? (
+                      <>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Business Name *
+                          </label>
+                          <input
+                            type="text"
+                            name="businessName"
+                            value={profile.businessName}
+                            onChange={(e) => changeBusiness(e)}
+                            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Business Type *
+                          </label>
+                          <select
+                            name="businessType"
+                            value={profile?.businessType}
+                            onChange={(e) => changeBusiness(e)}
+                            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          >
+                            <option value="">Select business type</option>
+                            <option value="Sole Proprietorship">Sole Proprietorship</option>
+                            <option value="Partnership">Partnership</option>
+                            <option value="LLC">LLC</option>
+                            <option value="Corporation">Corporation</option>
+                            <option value="Nonprofit">Nonprofit</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Business Email *
+                          </label>
+                          <input
+                            name="email"
+                            type="email"
+                            value={profile.email}
+                            onChange={(e) => changeBusiness(e)}
+                            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Phone Number *
+                          </label>
+                          <input
+                            name="phone"
+                            type="tel"
+                            value={profile?.phone}
+                            onChange={(e) => changeBusiness(e)}
+                            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <h2 className="text-2xl font-bold text-gray-900">
+                          {profile?.businessName}
+                        </h2>
+                        <div className="flex items-center">
+                          <span className="px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                            {profile?.businessType}
+                          </span>
+                          <span className="ml-2 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            {profile?.status}
+                          </span>
+                        </div>
+                        <div className="mt-4 space-y-2">
+                          <div className="flex items-center">
+                            <svg className="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <span>{profile.email}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <svg className="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            <span>{profile.phone || 'Not provided'}</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
+            )}
 
-              {/* <div>
-                <h3 className="font-medium mb-2">Description</h3>
+            {/* Address Tab */}
+            {activeTab === "address" && (
+              <div className="space-y-6">
+                <h3 className="text-lg font-medium text-gray-900">Business Address</h3>
                 {isEditing ? (
-                  <textarea
-                    value={businessData.business.description}
-                    onChange={(e) => handleInputChange('business', 'description', e.target.value)}
-                    className="w-full p-2 border rounded-md"
-                    rows={3}
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Street *
+                      </label>
+                      <input
+                        type="text"
+                        value={address.street}
+                        onChange={(e) => handleInputChange("street", e.target.value)}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        City *
+                      </label>
+                      <input
+                        type="text"
+                        value={address.city}
+                        onChange={(e) => handleInputChange("city", e.target.value)}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        State *
+                      </label>
+                      <input
+                        type="text"
+                        value={address.state}
+                        onChange={(e) => handleInputChange("state", e.target.value)}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        District *
+                      </label>
+                      <input
+                        type="text"
+                        value={address.district}
+                        onChange={(e) => handleInputChange("district", e.target.value)}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Country *
+                      </label>
+                      <input
+                        type="text"
+                        value={address.country}
+                        onChange={(e) => handleInputChange("country", e.target.value)}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Postal Code *
+                      </label>
+                      <input
+                        type="text"
+                        value={address.pin}
+                        onChange={(e) => handleInputChange("pin", e.target.value)}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                    </div>
+                  </div>
                 ) : (
-                  <p>{businessData.business.description}</p>
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Street</p>
+                       <p className="mt-1 text-gray-900">
+  {address.street
+    ? (() => {
+        const parts = address.street.split(',');
+        if (parts.length > 2) {
+          return (
+            <>
+              {parts.slice(0, 2).join(',')}
+              <br />
+              {parts.slice(2).join(',')}
+            </>
+          );
+        }
+        return address.street;
+      })()
+    : 'Not provided'}
+</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">City</p>
+                        <p className="mt-1 text-gray-900">{address.city || 'Not provided'}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">State</p>
+                        <p className="mt-1 text-gray-900">{address.state || 'Not provided'}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">District</p>
+                        <p className="mt-1 text-gray-900">{address.district || 'Not provided'}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Country</p>
+                        <p className="mt-1 text-gray-900">{address.country || 'Not provided'}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Postal Code</p>
+                        <p className="mt-1 text-gray-900">{address.pin || 'Not provided'}</p>
+                      </div>
+                    </div>
+                  </div>
                 )}
-              </div> */}
-            </div>
-          )}
+              </div>
+            )}
 
-          {/* Address Tab */}
-          {activeTab === "address" && (
-            <div className="space-y-4">
-              {isEditing ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Street
-                    </label>
-                    <input
-                      type="text"
-                      value={address.street}
-                      onChange={(e) =>
-                        handleInputChange("street", e.target.value)
-                      }
-                      className="mt-1 w-full p-2 border rounded-md"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      City
-                    </label>
-                    <input
-                      type="text"
-                      value={address.city}
-                      onChange={(e) =>
-                        handleInputChange("city", e.target.value)
-                      }
-                      className="mt-1 w-full p-2 border rounded-md"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      State
-                    </label>
-                    <input
-                      type="text"
-                      value={address.state}
-                      onChange={(e) =>
-                        handleInputChange( "state", e.target.value)
-                      }
-                      className="mt-1 w-full p-2 border rounded-md"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                     District
-                    </label>
-                    <input
-                      type="text"
-                      value={address.district}
-                      onChange={(e) =>
-                        handleInputChange( "district", e.target.value)
-                      }
-                      className="mt-1 w-full p-2 border rounded-md"
-                    />
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Country
-                    </label>
-                    <input
-                      type="text"
-                      value={address.country}
-                      onChange={(e) =>
-                        handleInputChange( "country", e.target.value)
-                      }
-                      className="mt-1 w-full p-2 border rounded-md"
-                    />
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      pin
-                    </label>
-                    <input
-                      type="text"
-                      value={address.pin}
-                      onChange={(e) =>
-                        handleInputChange("country", e.target.value)
-                      }
-                      className="mt-1 w-full p-2 border rounded-md"
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <p className="font-medium">Business Address</p>
-                  <p>{address.street}</p>
-                  <p>
-                    {address.city}, {address.state}{" "}
-                    {address.district}
-                  </p>
-                  <p>{address.country}</p>
-                  <p>{address.pin}</p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Bank Details Tab */}
-          {activeTab === "bank" && (
-            <div className="space-y-4">
-              {isEditing ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Bank Name
-                    </label>
-                    <input
-                      type="text"
-                      value={bank.bankName}
-                      onChange={(e) =>
-                        handleInputChange("bankName", e.target.value)
-                      }
-                      className="mt-1 w-full p-2 border rounded-md"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      {" "}
-                      Branch
-                    </label>
-                    <input
-                      type="text"
-                      value={bank.branch}
-                      onChange={(e) =>
-                        handleInputChange(
-                         
-                          "branch",  
-                          e.target.value
-                        )
-                      }
-                      className="mt-1 w-full p-2 border rounded-md"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      {" "}
-                      Account number
-                    </label>
-                    <input
-                      type="text"
-                      value={bank.accountNumber}
-                      onChange={(e) =>
-                        handleInputChange(
-                         
-                          "accountNumber",
-                          e.target.value
-                        )
-                      }
-                      className="mt-1 w-full p-2 border rounded-md"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      {" "}
-                      Account holder name
-                    </label>
-                    <input
-                      type="text"
-                      value={bank.accountHolderName}
-                      onChange={(e) =>
-                        handleInputChange(
-                         
-                          "accountHolderName",
-                          e.target.value
-                        )
-                      }
-                      className="mt-1 w-full p-2 border rounded-md"
-                    />
-                  </div>
-                  {/* <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      {" "}
-                      Account number
-                    </label>
-                    <input
-                      type="text"
-                      value={bank.branch}
-                      onChange={(e) =>
-                        handleInputChange(
-                         
-                          "accountNumber",
-                          e.target.value
-                        )
-                      }
-                      className="mt-1 w-full p-2 border rounded-md"
-                    />
-                  </div> */}
-                  {/* <div>
-                    <label className="block text-sm font-medium text-gray-700"> Account Holder Name</label>
-                    <input
-                      type="text"
-                      value={profile.bank.accountHolder}
-                      onChange={(e) => handleInputChange('bank', 'routingNumber', e.target.value)}
-                      className="mt-1 w-full p-2 border rounded-md"
-                    />
-                  </div> */}
-                  
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700">IFSC code</label>
-                    <input
-                      type="text"
-                      value={bank.ifscCode}
-                      onChange={(e) => handleInputChange( 'ifscCode', e.target.value)}
-                      className="mt-1 w-full p-2 border rounded-md"
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <p className="font-medium">Bank Information</p>
-                  <div className="grid grid-cols-2 gap-4">
+            {/* Bank Details Tab */}
+            {activeTab === "bank" && (
+              <div className="space-y-6">
+                <h3 className="text-lg font-medium text-gray-900">Bank Account Information</h3>
+                {isEditing ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <p className="text-sm text-gray-500">Bank Name</p>
-                      <p>{bank.bankName}</p>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Bank Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={bank.bankName}
+                        onChange={(e) => handleInputChange("bankName", e.target.value)}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Branch</p>
-                      <p>{bank.branch}</p>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Branch *
+                      </label>
+                      <input
+                        type="text"
+                        value={bank.branch}
+                        onChange={(e) => handleInputChange("branch", e.target.value)}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Account Number</p>
-                      <p>{bank.accountNumber}</p>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Account Holder Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={bank.accountHolderName}
+                        onChange={(e) => handleInputChange("accountHolderName", e.target.value)}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Account holder name </p>
-                      <p>{bank.accountHolderName}</p>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Account Number *
+                      </label>
+                      <input
+                        type="text"
+                        value={bank.accountNumber}
+                        onChange={(e) => handleInputChange("accountNumber", e.target.value)}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-500">IFSC code</p>
-                      <p>{bank.ifscCode}</p>
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        IFSC Code *
+                      </label>
+                      <input
+                        type="text"
+                        value={bank.ifscCode}
+                        onChange={(e) => handleInputChange("ifscCode", e.target.value)}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
                     </div>
                   </div>
-                  {/* <div className="pt-2">
-                    <p className="text-sm text-gray-500">Account Holder</p>
-                    <p>{businessData.bank.accountHolder}</p>
-                  </div> */}
-                </div>
-              )}
-            </div>
-          )}
+                ) : (
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Bank Name</p>
+                        <p className="mt-1 text-gray-900">{bank.bankName || 'Not provided'}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Branch</p>
+                        <p className="mt-1 text-gray-900">{bank.branch || 'Not provided'}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Account Holder</p>
+                        <p className="mt-1 text-gray-900">{bank.accountHolderName || 'Not provided'}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">Account Number</p>
+                        <p className="mt-1 text-gray-900">{bank.accountNumber || 'Not provided'}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">IFSC Code</p>
+                        <p className="mt-1 text-gray-900">{bank.ifscCode || 'Not provided'}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
