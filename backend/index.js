@@ -17,8 +17,9 @@ app.use(cookie_parser())
   
 
 app.use(cors({
-    origin:process.env.Base_Origin,
-    credentials:true  // important for cookies
+    // origin:process.env.Base_Origin,
+    origin:'https://mrig-mart-seller.vercel.app',
+    credentials:true  
 }))
 
 dotenv.config()
