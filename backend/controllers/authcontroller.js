@@ -130,10 +130,12 @@ const signin=async(req,res)=>{
 
          // Set the JWT in a cookie
         res.cookie("seller_token", token, {
-            httpOnly: true,
-             secure: false,     //process.env.NODE_ENV === "production", // Ensure cookies are only sent over HTTPS in production
-            maxAge: 5 * 60 * 60 * 1000, // 5 hour
-        });
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production", // only true in production
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  maxAge: 5 * 60 * 60 * 1000 // 5 hours
+});
+
         return res.status(200).json({message:"login successfull",status:seller?.status,logo:seller?.logo})
 
     } catch (error) {
