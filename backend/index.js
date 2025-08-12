@@ -17,7 +17,7 @@ app.use(cookie_parser())
   
 
 app.use(cors({
-    origin:'http://localhost:5173',
+    origin:process.env.Base_Origin,
     credentials:true  // important for cookies
 }))
 
@@ -27,8 +27,8 @@ dotenv.config()
 app.use('/api/auth',authroutes)
 app.use('/api/seller',seller_routes)
            
-const port=process.env.port || 999
+const PORT=process.env.PORT || 999
 
-app.listen(port,()=>{
-    console.log(`server running at port ${port}`)
-})
+app.listen(PORT,()=>{
+    console.log(`server running at port ${PORT}`)
+}) 
