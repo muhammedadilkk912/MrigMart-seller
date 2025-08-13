@@ -64,11 +64,13 @@ const registeration=async(req,res)=>{
      
 }
 const logout=(req,res)=>{
+ 
     
        res.clearCookie('seller_token', {    
         httpOnly: true,
-        secure: true,       // must match cookie options from login
-        sameSite: 'strict', // must match
+        secure: process.env.NODE_ENV === "production", // only true in production
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",  // must match cookie options from login
+      // must match
         path: '/',          // must match
       });
       res.status(200).json({message:"logout successfully completed"})
@@ -329,6 +331,7 @@ const updateproduct=async(req,res)=>{
         }
      }
   const updateprofile=async(req,res)=>{   
+    console.log("update profile=")
        
     console.log(req?.file)
     console.log(req.body)  
