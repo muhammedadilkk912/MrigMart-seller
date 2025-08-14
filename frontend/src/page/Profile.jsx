@@ -11,7 +11,8 @@ const SimpleBusinessProfile = () => {
   const [activeTab, setActiveTab] = useState("business");
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
-  const [logo, setLogo] = useState();
+  const [businessLogo,setBusinessLogo]=useState()
+  // const [logo, setLogo] = useState();
   const [preview, setPreview] = useState();
 
   // State for profile data
@@ -75,11 +76,12 @@ const SimpleBusinessProfile = () => {
         ifscCode: data.bankDetails.ifscCode,
         branch: data.bankDetails.branch
       });
+      
 
-      setLogo(data?.logo);
+      setBusinessLogo(data?.logo);
       setPreview(data?.logo);
       setEditData(data);
-      dispatch(setLogo(data.logo));
+      dispatch(setLogo(data?.logo));
     } catch (error) {
       console.log("Error in get profile:", error);
     } finally {
@@ -111,7 +113,7 @@ const SimpleBusinessProfile = () => {
          
           setPreview(reader.result)
           console.log("file=",file)
-          setLogo(file)
+          setBusinessLogo(file)
           
         };
         reader.readAsDataURL(file);
@@ -204,29 +206,32 @@ const SimpleBusinessProfile = () => {
         if(activeTab==='business'){
           console.log('inside the business validation',checkChanges(profile,editData))
          let change= checkChanges(profile,editData)
-         let imageCheck=editData.logo !== logo?false:true
-        //  console.log(logo,"=",editData.logo)
+         let imageCheck=editData.logo !== businessLogo?false:true
+         console.log("image imageCheck=",imageCheck)
+        //  console.log(logo,"=",editData.logo)   
         //  console.log("imageCheck=",imageCheck)
          if(!change&&imageCheck ){
              toast.warning("no changes are happen")
              return null
           }
          if(!imageCheck){
-           formData.append('image',logo)
+          console.log("changedimage")
+           formData.append('image',businessLogo)
          }
          
 
           console.log("change=",change)
           console.log(change,"+++",imageCheck)
-          if(change && bus_validation()){
+          console.log(bus_validation())
+         
+          if(change && bus_validation()){    
             formData.append('profile',JSON.stringify(profile))
-          }else{
-            return null
           }
+
           // return null
           // console.log(bus_validation())
           // return null
-          console.log(logo)
+          console.log(businessLogo)
           console.log(editData.logo)
           
           
@@ -318,7 +323,7 @@ const  handleInputChange=(name,value)=>{
     }
     console.log("new obj=",obj)
     setProfile(obj)
-    setLogo(editData.logo)
+    setBusinessLogo(editData.logo)
     setPreview(editData.logo)
     
     

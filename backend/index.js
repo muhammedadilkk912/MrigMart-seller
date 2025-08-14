@@ -17,8 +17,8 @@ app.use(cookie_parser())
   
 
 app.use(cors({
-    // origin:process.env.Base_Origin,
-    origin:'https://mrig-mart-seller.vercel.app',
+    origin:process.env.Base_Origin,
+    // origin:'https://mrig-mart-seller.vercel.app',
     credentials:true  
 }))
 

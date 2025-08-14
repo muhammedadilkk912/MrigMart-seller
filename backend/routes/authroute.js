@@ -11,5 +11,5 @@ router.post('/Verify-otp',verfiy_otp)
 router.post('/resendotp',resentOtp)
 router.post('/forget-password',forgetpassword)
 router.put('/changepassword/:email',changepasword)
-router.get('/checkauth',checkauth)
+router.get('/checkauth',checkauth) 
 module.exports=router

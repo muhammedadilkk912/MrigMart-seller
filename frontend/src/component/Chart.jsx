@@ -52,13 +52,23 @@ const getsalesreport=async()=>{
         }
         
     else if(filter=== '7days'){
+      let cc=[]
      const last7Days = Array.from({ length: 7 }).map((_, i) => {
         const date = new Date();
         date.setDate(date.getDate() - (6 - i));
+        console.log("date", date.getDate())
+        let ExtractDate=date.getDate()
+        let mon=MONTHS[date.getMonth()]
+        cc.push(mon+" "+ExtractDate)
         // console.log(date) // to get in chronological order
         const formatted = date.toISOString().split("T")[0]; // 'YYYY-MM-DD'
+
+        console.log("formatted=",formatted)
         return formatted;
       });
+      console.log("last 7 day",last7Days)
+      // console.log("cc=",cc)
+      console.log("data.sale",data.sales)
 
     //   console.log(last7Days)
         const salesMap = {};
@@ -67,10 +77,19 @@ const getsalesreport=async()=>{
       });
       console.log(salesMap)
       
-      const formattedSales = last7Days.map(date => ({
-        date,
+      const formattedSales = last7Days.map(date => {
+        console.log("oldd=",typeof date)
+        let extractedDate=new Date(date)
+        const month = extractedDate.toLocaleString('en-IN', { month: 'short' }); // get month name
+        const day = extractedDate.getDate(); // get day number
+        // console.log("exe=",extractedDate)
+        
+        return{
+        date:`${month} ${day}`,
         sales: salesMap[date] || 0,
-      }));
+      }});
+      console.log("fromateed sale=",formattedSales)   
+
 
       setChartData(formattedSales);
 
@@ -93,12 +112,12 @@ const getsalesreport=async()=>{
     }
 }
   return (
-    <div className='flex flex-col space-y-2 w-full'>
+    <div className='flex flex-col  space-y-2 w-full'>
         <div className="flex justify-end ">
   <select
     value={filter}
     onChange={(e) => setFilter(e.target.value)}
-    className="border border-gray-300  rounded px-2 py-1"
+    className="border border-gray-300 hover:border-blue-500 rounded px-0  sm:px-2 py-1"
   >
     {/* <option value=""></option> */}
     <option value="6months">Last 6 Months</option>
@@ -108,14 +127,15 @@ const getsalesreport=async()=>{
 
 
    
-    <div className="  w-full h-80 ">
+    <div className="  w-full outline-none  h-80 ">
        
 
       {/* <h2 className="text-lg font-semibold ">Monthly Sales</h2> */}
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey={filter === '7days' ? 'date':'month'} />
+      <ResponsiveContainer  width="100%" height="100%">
+        <LineChart  width={600}
+  height={300} margin={{bottom:30,right:10,top:10}} data={chartData}>
+          <CartesianGrid strokeDasharray="5 5" />
+          <XAxis angle={-40} className='text-red-700' textAnchor='end' dy={10} dataKey={filter === '7days' ? 'date':'month'} />
           <YAxis />
           <Tooltip />
           <Line

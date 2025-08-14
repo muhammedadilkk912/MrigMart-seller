@@ -178,6 +178,7 @@ const changestatus=async(orderId,productId,newStatus,oldStatus)=>{
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 lg:col-span-2">
+          <h1 className='font-semibold  sm:text-2xl tracking-wide'>Sales Report </h1>
           
 
           <Chart/>
