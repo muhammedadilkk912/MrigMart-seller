@@ -23,12 +23,15 @@ const authSlice=createSlice({
             state.isAuthenticate=false,
             state.status=null
         },
-        setLogo(state,action){
+        setLogo(state,action){ 
             console.log("payload=",action.payload)
             state.logo=action.payload
+        },
+        setStatus(state,action){
+            state.status='pending'
         }
     }
 })
   
-export const{login,setAuthentication,Logout,setLogo}=authSlice.actions;
+export const{login,setAuthentication,Logout,setLogo,setStatus}=authSlice.actions;
 export default authSlice.reducer;

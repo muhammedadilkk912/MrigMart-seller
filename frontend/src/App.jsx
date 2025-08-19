@@ -74,9 +74,17 @@ const App = () => {
         <Route path="/" element={<RedirectRoot/>} />
         <Route path="/registeration" element={<Registeration />} />
         <Route path="/forgetpassword" element={<Forgetpas />} />
+         {
+          status !== 'pending'&&
+          <Route path="/business_reg" element={<BusinessReg />} />
+         }
 
-         <Route path="/business_reg" element={<BusinessReg />} />
-         <Route path="/Sellerinfo" element={<SellingInfo />} />
+         {
+          status !== 'approved' &&
+           <Route path="/Sellerinfo" element={<SellingInfo />} />
+
+         }  
+        
        
         <Route element={<ProtectedRoute />}>
                  

@@ -3,11 +3,16 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Spinner from "../component/Spinner";
 import { RiCloseLargeLine } from "react-icons/ri";
+import { useEffect } from "react";
 
 const SellingInfo = () => {
   const [loading, setLoading] = useState(false);
   const status = useSelector((state) => state.auth.status);
   const [showalert,setShowalert]=useState(true)
+  useEffect(()=>{
+   console.log("inside the useEffect")
+  },[status])  
+  console.log("new status=",status)
   console.log("status frokjnaskdk=", status);
   if(status==='pending'){
     console.log("inside if")
@@ -46,7 +51,7 @@ const SellingInfo = () => {
                 day
               </p>
               {
-                status === 'pre-registration' && <Link to="/business_reg">
+                status === 'pre-registration' && <Link to="/business_reg"> 
                 <button
                   className="bg-white text-indigo-700 font-bold py-3 px-8 rounded-lg text-lg hover:bg-indigo-100 transition duration-300"
                   onClick={() => {

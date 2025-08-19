@@ -37,6 +37,7 @@ const registeration=async(req,res)=>{
      }
      seller.businessName=newData.businessName,
      seller.businessType=newData.businessType,
+     seller.phone=newData.phone,
      seller.address.street=newData.address.street,
      seller.address.city=newData.address.city,
      seller.address.district=newData.address.district,

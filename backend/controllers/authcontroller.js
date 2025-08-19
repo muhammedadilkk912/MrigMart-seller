@@ -36,6 +36,9 @@ const Registeration=async(req,res)=>{
                  seller.password=hashedpassword
               
                 try {
+                    console.log(seller.email,otp)   
+                          
+
                        await sendMail(seller.email,otp)
                        console.log("otp sended successfully")
                 } catch (error) {
@@ -70,6 +73,9 @@ const Registeration=async(req,res)=>{
 
         try {
             console.log("inside the sending mail")
+            console.log("email=",email,otp)
+
+            
              await sendMail(email,otp)
              console.log("sending mail successfull")
 
@@ -94,7 +100,7 @@ const Registeration=async(req,res)=>{
         }
 
         
- 
+     
 }
 const signin=async(req,res)=>{
     console.log("inside the sign in")

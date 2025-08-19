@@ -6,10 +6,13 @@ import Spinner from '../component/Spinner';
 import axiosInstance from '../configure/axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
+import { setStatus } from '../Redux/authSlic';
 
 const BusinessReg = () => {
-  const loading=useSelector((state)=>state.loading.isLoading)
-  const dispatch=useDispatch
+  // const loading=useSelector((state)=>state.loading.isLoading)
+  const [loading,setLoading]=useState(false)
+  const dispatch=useDispatch()
+
   const navigate=useNavigate()
   const [data, setData] = useState({
     businessName: '',
@@ -229,16 +232,21 @@ const BusinessReg = () => {
       formdata.append('image',logo)
     }
     try {
+      setLoading(true)
       const response=await axiosInstance.post('/seller/registeration',formdata,{
          headers:{'Content-Type':'multipart/form-data'}
       })
       console.log("response=",response);
+        dispatch(setStatus())
       toast.success(response?.data?.message)
+      
       navigate(-1)
     } catch (error) {
       console.log("eroor in registeration=",error)
       toast.error(error?.response?.data?.message)
       
+    }finally{
+      setLoading(false)
     }
   } 
   
