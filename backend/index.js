@@ -23,7 +23,7 @@ app.use(cors({
 }))
 
 dotenv.config()
-
+   
 
 app.use('/api/auth',authroutes)
 app.use('/api/seller',seller_routes)

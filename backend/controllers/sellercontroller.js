@@ -1229,6 +1229,8 @@ const topproducts=async(req,res)=>{
         $match:{'addedBY':sellerId}
       },{
         $sort:{'sold':-1}
+      },{
+        $limit:5
       }
       
     ])

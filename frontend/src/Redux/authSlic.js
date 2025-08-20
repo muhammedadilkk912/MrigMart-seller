@@ -30,7 +30,7 @@ const authSlice=createSlice({
         setStatus(state,action){
             state.status='pending'
         }
-    }
+    }   
 })
   
 export const{login,setAuthentication,Logout,setLogo,setStatus}=authSlice.actions;
