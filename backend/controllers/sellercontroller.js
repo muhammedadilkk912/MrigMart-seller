@@ -19,6 +19,9 @@ const registeration=async(req,res)=>{
     if(!newData){
         return res.status(400).json({message:"value are not found"})
     }
+   console.log(newData)
+
+   
    
    let logo
     
@@ -37,7 +40,7 @@ const registeration=async(req,res)=>{
      }
      seller.businessName=newData.businessName,
      seller.businessType=newData.businessType,
-     seller.phone=newData.phone,
+     seller.phone=newData.mobile,
      seller.address.street=newData.address.street,
      seller.address.city=newData.address.city,
      seller.address.district=newData.address.district,

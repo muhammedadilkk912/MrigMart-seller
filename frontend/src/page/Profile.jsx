@@ -453,7 +453,7 @@ const  handleInputChange=(name,value)=>{
                   <div className="flex-shrink-0">
                     <div className="relative">
                       <img
-                        src={preview}
+                        src={preview || '/user.png'}
                         alt="Business logo"
                         className="h-32 w-32 rounded-lg object-cover border-2 border-gray-200"
                       />
